@@ -1,0 +1,52 @@
+version: '3.7'
+
+services: 
+  main_ms_data_sharing:
+    container_name: main_ms_data_sharing
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - ${SERVER_PORT}
+      - 9229:9229
+    command: npm run start:debug
+    env_file:
+      - .env
+    networks:
+      - net
+    depends_on: 
+      - postgres_ms_data_sharing
+  postgres_ms_data_sharing:
+    container_name: postgres_ms_data_sharing
+    image: postgres:12
+    networks:
+      - net
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - 5433:5433
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  pgadmin_container_ms_data_sharing:
+    container_name: pgadmin_container_ms_data_sharing
+    image: dpage/pgadmin4
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - ${PGADMIN_PORT}:80
+    networks: 
+      - net
+networks:
+  net:
+volumes:
+  pgdata:
+  pgadmin:

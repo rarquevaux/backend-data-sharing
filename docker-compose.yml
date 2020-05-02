@@ -1,0 +1,58 @@
+version: '3.7'
+
+services: 
+
+  main_ms_data_sharing:
+    container_name: main_ms_data_sharing
+    build:
+      context: ./ms-data-sharing
+      target: development
+    ports:
+      - 3001:3001
+    command: npm run start:debug
+    env_file: 
+      - ./ms-data-sharing/.env
+ #   networks:
+ #     - net
+
+  main:
+    container_name: main
+    build:
+      context: ./api-items
+      target: development
+    ports:
+      - 3000:3000
+      - 9230:9230
+    command: npm run start:debug
+    env_file:
+      - ./api-items/.env
+#    networks:
+#      - net
+    depends_on: 
+      - postgres
+      - main_ms_data_sharing
+
+  postgres:
+    container_name: postgres
+    image: postgres:12
+#    networks:
+#      - net
+    environment:
+      POSTGRES_PASSWORD: nesta
+      POSTGRES_USER: admin
+      POSTGRES_DB: items
+      PG_DATA: /var/lib/postgresql/data-api
+    ports:
+      - 5432:5432
+    env_file:
+      - ./api-items/.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data-api
+
+#networks:
+#  net:
+volumes:
+  pgdata:
+
+
+
