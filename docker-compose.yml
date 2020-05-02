@@ -12,8 +12,6 @@ services:
     command: npm run start:debug
     env_file: 
       - ./ms-data-sharing/.env
- #   networks:
- #     - net
 
   main:
     container_name: main
@@ -26,8 +24,6 @@ services:
     command: npm run start:debug
     env_file:
       - ./api-items/.env
-#    networks:
-#      - net
     depends_on: 
       - postgres
       - main_ms_data_sharing
@@ -35,8 +31,6 @@ services:
   postgres:
     container_name: postgres
     image: postgres:12
-#    networks:
-#      - net
     environment:
       POSTGRES_PASSWORD: nesta
       POSTGRES_USER: admin
@@ -49,8 +43,6 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data-api
 
-#networks:
-#  net:
 volumes:
   pgdata:
 
