@@ -14,4 +14,7 @@ export class Item {
 
     @Column()
     itemHash: string;
+
+    @Column()
+    shared: boolean;
 }
