@@ -62,4 +62,11 @@ export class ItemsController {
     return this.itemsService.accumulate(data);
   }
 
+  // @Post('share')
+  // @UsePipes (new ValidationPipe())
+  // async share(@Body() createItemDto: CreateItemDto): Promise<Item> {
+  //   this.logger.log('Sharing ' + createItemDto);
+  //   return this.itemsService.shareItem(createItemDto);
+  // }
+
 }

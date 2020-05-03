@@ -12,4 +12,6 @@ export class Item {
     @Column()
     price: number;
 
+    @Column()
+    itemHash: string;
 }

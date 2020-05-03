@@ -1,12 +1,14 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Item } from './item.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ClientProxyFactory, Transport, ClientProxy } from '@nestjs/microservices';
+import { createHash } from 'crypto';
 
 @Injectable()
 export class ItemsService {
     private client: ClientProxy;
+    private logger = new Logger('ItemsService'); 
 
     constructor(
         @InjectRepository(Item)
@@ -48,8 +50,11 @@ export class ItemsService {
     * @return an Item
     * */
     async createItem(item: Item): Promise<Item> {
-       return this.itemsRepository.save(item);
+        const hash = createHash('sha256');
+        hash.update(JSON.stringify(item));
+        item.itemHash = hash.digest('hex');
+        this.logger.log("new item createed with hash: " + item.itemHash);
+        return this.itemsRepository.save(item);
     }
-
     
 }
