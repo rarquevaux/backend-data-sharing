@@ -7,6 +7,9 @@ services:
     build:
       context: ./ms-data-sharing
       target: development
+    volumes:
+      - ./ms-data-sharing:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - 3001:3001
     command: npm run start:debug
@@ -18,6 +21,9 @@ services:
     build:
       context: ./api-items
       target: development
+    volumes:
+      - ./api-items:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - 3000:3000
       - 9230:9230
