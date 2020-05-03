@@ -5,8 +5,9 @@ export class Item {
     shared?: boolean;
 }
 
-export class Share {
+export class ShareMessage {
     readonly id: number;
     readonly recipientId: number;
+    hash?: string;
 }
 
