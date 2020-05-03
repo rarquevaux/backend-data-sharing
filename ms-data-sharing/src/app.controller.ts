@@ -1,6 +1,7 @@
 import { Controller, Logger } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern } from "@nestjs/microservices";
+import { ShareMessage } from './shareMessage.interface';
 
 @Controller()
 export class AppController {
@@ -9,8 +10,8 @@ export class AppController {
 
   constructor(private appService: AppService) {}
 
-  @MessagePattern('add')
-  async accumulate(data: number[]): Promise<number> {
-    return (data || []).reduce((a, b) => a + b);
+  @MessagePattern('share')
+  async share(message: ShareMessage): Promise<string> {
+    return this.appService.share(message);
   }
 }

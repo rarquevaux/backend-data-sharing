@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { ShareMessage } from './shareMessage.interface';
 
 @Injectable()
 export class AppService {
-  accumulate(data: number[]): number {
-    console.log('appService');
-    return (data || []).reduce((a, b) => Number(a) + Number(b));
+
+  private logger = new Logger('AppService');
+
+  share(message: ShareMessage): string {
+    this.logger.log("sharing item with recipient...")
+    return "sharing item";
   }
 }
