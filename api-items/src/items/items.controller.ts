@@ -13,7 +13,7 @@ import {
   Logger,
  } from '@nestjs/common';
 import { ItemsService } from './items.service';
-import { Item } from './item.interface';
+import { Item, ShareMessage } from './item.interface';
 import { ValidationPipe } from '../common/validation.pipe';
 import { CreateItemDto } from './create-item.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -28,7 +28,6 @@ export class ItemsController {
   async findAll(): Promise<Item[]> {
     return this.itemsService.findAll();
   }
-
   
   @UseGuards(AuthGuard('jwt'))
   @Post('items')
@@ -36,8 +35,6 @@ export class ItemsController {
   async create(@Body() createItemDto: CreateItemDto): Promise<Item> {
     return this.itemsService.createItem(createItemDto);
   }
-
-    
 
   @Get('items/:id')
   async getById(@Param('id') id: number): Promise<Item> {
@@ -54,19 +51,18 @@ export class ItemsController {
   delete(@Param('id') id: number) {
     //this.itemsService.delete(id);
     throw new BadRequestException();
+  } 
+
+  //@UseGuards(AuthGuard('jwt'))
+  @Post('share')
+  async share(@Body() message: ShareMessage): Promise<any> {
+    const itemInfo = await this.itemsService.findOne(message.id);
+    if(!itemInfo){
+      this.logger.log('Item not found');
+      throw new NotFoundException(`Item with id ${message.id} not found`);
+    } else {
+      this.logger.log('Sharing ' + message.id + " with " + message.recipientId);
+      return this.itemsService.shareItem(message);
+    }
   }
-
-  @Post('add')
-  async accumulate(@Body('data') data: number[]) {
-    this.logger.log('Adding ' + data.toString());
-    return this.itemsService.accumulate(data);
-  }
-
-  // @Post('share')
-  // @UsePipes (new ValidationPipe())
-  // async share(@Body() createItemDto: CreateItemDto): Promise<Item> {
-  //   this.logger.log('Sharing ' + createItemDto);
-  //   return this.itemsService.shareItem(createItemDto);
-  // }
-
 }
