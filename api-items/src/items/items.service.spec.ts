@@ -36,6 +36,12 @@ describe("-- Items Service --", () => {
           });
       });
 
+    // describe('shareItem', () => {
+    //   it('should send share message to ms-data-sharing', async () => {
+
+    //   })
+    // })
+
     describe('findOne', () => {
         it('should return the item which id was passed', () => {
           
