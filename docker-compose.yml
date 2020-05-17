@@ -15,6 +15,10 @@ services:
     command: npm run start:debug
     env_file: 
       - ./ms-data-sharing/.env
+    networks: 
+      - orchestrate
+      - default
+      
 
   main:
     container_name: main
@@ -25,7 +29,7 @@ services:
       - ./api-items:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - 3000:3000
+      - 3002:3002
       - 9230:9230
     command: npm run start:debug
     env_file:
@@ -33,6 +37,8 @@ services:
     depends_on: 
       - postgres
       - main_ms_data_sharing
+    networks:
+      - default
 
   postgres:
     container_name: postgres
@@ -48,8 +54,15 @@ services:
       - ./api-items/.env
     volumes:
       - pgdata:/var/lib/postgresql/data-api
+    networks:
+      - default
 
 volumes:
   pgdata:
 
-
+networks:
+#  app:
+#    name: app_default
+  orchestrate:
+    external:
+      name: deps_orchestrate
